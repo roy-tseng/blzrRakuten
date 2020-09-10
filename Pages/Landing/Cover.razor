@@ -1,16 +1,38 @@
 @page "/cover"
 <link href="css/components.min.css" rel="stylesheet" />
 
+@inject blzrRakuten.Services.CounterService CounterService
+@implements IDisposable
+
 <div>
-@this.name
+@CounterService.Counter<br/>
+<button @onclick="ExecuteIncrease">+</button>&nbsp;&nbsp;
+<button @onclick="ExecuteDecrease">-</button>
 </div>
 
 @code{
     private string name { get; set;}
 
+    private int value = 1;
+
     protected override void OnInitialized()
     {
         base.OnInitialized();
         this.name = "Cover";
+        CounterService.Counter = 0;
+        CounterService.onChange += StateHasChanged;
     }
+
+    public void Dispose()
+    {
+        CounterService.onChange -= StateHasChanged;
+    }
+
+    private async void ExecuteIncrease(){
+        await CounterService.Increase(this.value);
+    }
+    private async void ExecuteDecrease(){
+        await CounterService.Decrease(this.value);
+    }
+
 }

@@ -1,0 +1,21 @@
+@page "/CompanyProfile"
+@inject blzrRakuten.Services.CounterService CounterService
+@implements IDisposable
+
+<div>
+   Current Number =  @CounterService.Counter
+</div>
+
+
+@code{
+
+    protected override void OnInitialized()
+    {
+        CounterService.onChange += StateHasChanged;
+    }
+
+    public void Dispose()
+    {
+        CounterService.onChange -= StateHasChanged;
+    }
+}
